@@ -12,7 +12,8 @@ def scrape_page(url):
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
         # Extract and print data
-        for item in soup.find_all('h1'):
+        #for item in soup.find_all('h1'):
+        for item in soup.find_all("div", "link-feature__ind-element__description--wrapper"):
             print(item.get_text())
 
         # Respectful delay
