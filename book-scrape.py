@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import time
+price = 0
 
 def scrape_page(url):
     headers = {
@@ -12,11 +13,27 @@ def scrape_page(url):
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
 
-
+        highest_price = 0
+        highest_title = "None"
         for book in soup.find_all('article'):
+            assign_tit = book.find('img')['alt']
+            title = str(assign_tit)
             print(book.find('img')['alt'])
             print(book.find('p', 'price_color').get_text())
+        #Get rid of pound sign
+            assign_var = book.find('p', 'price_color').get_text()
+            prices_str = (assign_var.strip().replace('£', ''))
+            price= float(prices_str)
+#            # print(prices)
 
+        #Comparing prices
+            if highest_price <= price:
+                highest_price = price
+                highest_title = title
+                
+        print("")
+        print(f"The most expensive book is {highest_title} at £{highest_price}.")
+        
         # Respectful delay
         time.sleep(2)  # Avoid overloading the server
     else:
