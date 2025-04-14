@@ -12,13 +12,27 @@ def scrape_page(url):
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
 
+        # keep track of most expensive book price and title
+        most_title = ''
+        most_price = 0.00
 
         for book in soup.find_all('article'):
-            print(book.find('img')['alt'])
-            print(book.find('p', 'price_color').get_text())
+            #print(book.find('img')['alt'])
+            #print(book.find('p', 'price_color').get_text())
+
+            price = book.find('p', 'price_color').get_text()
+            price = float(price[1:])
+
+            if price > most_price:
+                most_price = price
+                most_title = book.find('img')['alt']
 
         # Respectful delay
         time.sleep(2)  # Avoid overloading the server
+    
+        print(most_title)
+        print(most_price)
+
     else:
         print(f"Failed to retrieve page. Status code: {response.status_code}")
 
